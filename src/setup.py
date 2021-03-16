@@ -19,10 +19,10 @@ setup(
 	author = "Jürgen Knauth",
 	author_email = "pubsrc@binary-overflow.de",
 	classifiers = [
-		"Development Status :: 3 - Alpha",
+		"Development Status :: 4 - Beta",
 		"Programming Language :: Python :: 3",
 	],
-	description = "An archiving concept that reduces redundancies before packing.",
+	description = "An archiver based on 'tar' that reduces redundancies before packing.",
 	include_package_data = False,
 	install_requires = [
 		"jk_pathpatternmatcher2",
@@ -30,7 +30,13 @@ setup(
 		"jk_utils",
 	],
 	keywords = [
-		"...",
+		"archiving",
+		"compression",
+		"gzip",
+		"tar",
+		"bzip",
+		"xz",
+		"webhosting",
 	],
 	license = "proprietary",
 	name = "jk_uploadpack",

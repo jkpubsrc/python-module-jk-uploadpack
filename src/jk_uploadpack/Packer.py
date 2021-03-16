@@ -108,6 +108,14 @@ class Packer(object):
 	## Helper Methods
 	################################################################################################################################
 
+	def __enter__(self):
+		return self
+	#
+
+	def __exit__(self, _extype, _exobj, _stacktrace):
+		self.close()
+	#
+
 	def _registerFile(self, filePath:str) -> typing.Tuple[SrcFileInfo,UPStoredBlob]:
 		srcFI = SrcFileInfo.fromFile(filePath)
 

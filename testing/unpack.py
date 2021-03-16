@@ -20,10 +20,10 @@ INPUT_FILE_NAME = "pack.up"
 
 
 
-up = jk_uploadpack.Unpacker(INPUT_FILE_NAME)
+with jk_uploadpack.Unpacker(INPUT_FILE_NAME) as up:
+	sp = jk_terminal_essentials.Spinner(len(up.fileGroup("default").files))
+	up.fileGroup("default").unpackToDir("out", sp)
 
-sp = jk_terminal_essentials.Spinner(len(up.fileGroup("default").files))
-up.fileGroup("default").unpackToDir("out", sp)
 sp.hide()
 
 print()

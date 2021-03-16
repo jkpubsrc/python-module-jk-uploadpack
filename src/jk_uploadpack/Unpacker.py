@@ -100,6 +100,14 @@ class Unpacker(object):
 	## Helper Methods
 	################################################################################################################################
 
+	def __enter__(self):
+		return self
+	#
+
+	def __exit__(self, _extype, _exobj, _stacktrace):
+		self.close()
+	#
+
 	def _createDir(self, dirPath:str):
 		if dirPath in self.__dirsCreated:
 			return
@@ -107,10 +115,11 @@ class Unpacker(object):
 		self.__dirsCreated.add(dirPath)
 	#
 
-	def _unpackToDir(self, file:UPFile, outBaseDirPath:str, sp:Spinner) -> typing.Tuple[str,str]:
+	def _unpackToDir(self, file:UPFile, outBaseDirPath:str, sp:Spinner = None) -> typing.Tuple[str,str]:
 		assert isinstance(file, UPFile)
 		assert isinstance(outBaseDirPath, str)
-		assert isinstance(sp, Spinner)
+		if sp is not None:
+			assert isinstance(sp, Spinner)
 
 		# ----
 
@@ -118,7 +127,9 @@ class Unpacker(object):
 		ti = self.__tIndex[_s]
 		tf = self.__t.extractfile(_s)
 
-		sp.spin("unpack", file.relFilePath)
+		if sp:
+			sp.spin("unpack", file.relFilePath)
+
 		targetFilePath = os.path.join(outBaseDirPath, file.relFilePath)
 		targetDirPath = os.path.dirname(targetFilePath)
 

@@ -8,12 +8,12 @@
 		"version": "0.2021.3.15",
 		"packageClass": "python-module",
 		"language": "python3",
-		"development_status": "alpha",
+		"development_status": "beta",
 		"license": "proprietary",
 		"keywords": [
-			"..."
+			"archiving", "compression", "gzip", "tar", "bzip", "xz", "webhosting",
 		],
-		"description": "An archiving concept that reduces redundancies before packing.",
+		"description": "An archiver based on 'tar' that reduces redundancies before packing.",
 		"authors": [
 			{
 				"name": "Jürgen Knauth",

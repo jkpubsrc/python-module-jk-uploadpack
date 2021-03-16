@@ -32,38 +32,37 @@ def compress(compression:str):
 
 	t0 = time.time()
 
-	up = jk_uploadpack.Packer(outFilePath, compression)
-	up.fileGroup("default").bCleanDir = True
+	with jk_uploadpack.Packer(outFilePath, compression) as up:
+		up.fileGroup("default").bCleanDir = True
 
-	allFiles = []
-	for e in jk_pathpatternmatcher2.walk(
-			SRC_DIR_PATH,
-			acceptDirPathPatterns = None,
-			acceptFilePathPatterns = "**/*",
-			acceptLinkPathPatterns = None,
-			ignorePathPatterns = "**/__*",
-			ignoreDirPathPatterns = None,
-			ignoreFilePathPatterns = None,
-			ignoreLinkPathPatterns = None,
-			emitDirs = False,
-			emitFiles = True,
-			emitLinks = False,
-			emitBaseDirs = False,
-			recursive = True,
-			sort = True,
-			emitErrorEntries = True,
-			clazz = None,
-			ioAdapter = None,
-		):
+		allFiles = []
+		for e in jk_pathpatternmatcher2.walk(
+				SRC_DIR_PATH,
+				acceptDirPathPatterns = None,
+				acceptFilePathPatterns = "**/*",
+				acceptLinkPathPatterns = None,
+				ignorePathPatterns = "**/__*",
+				ignoreDirPathPatterns = None,
+				ignoreFilePathPatterns = None,
+				ignoreLinkPathPatterns = None,
+				emitDirs = False,
+				emitFiles = True,
+				emitLinks = False,
+				emitBaseDirs = False,
+				recursive = True,
+				sort = True,
+				emitErrorEntries = True,
+				clazz = None,
+				ioAdapter = None,
+			):
 
-		allFiles.append((e.fullPath, e.relFilePath))
+			allFiles.append((e.fullPath, e.relFilePath))
 
-	sp = jk_terminal_essentials.Spinner(len(allFiles))
-	for fullPath, relFilePath in allFiles:
-		sp.spin("packing", relFilePath)
-		up.fileGroup("default").addFile(fullPath, relFilePath)
+		sp = jk_terminal_essentials.Spinner(len(allFiles))
+		for fullPath, relFilePath in allFiles:
+			sp.spin("packing", relFilePath)
+			up.fileGroup("default").addFile(fullPath, relFilePath)
 
-	up.close()
 	sp.hide()
 
 	print()
@@ -80,7 +79,7 @@ def compress(compression:str):
 
 
 compress(None)
-compress("gz")
-compress("bz2")
-compress("xz")
+#compress("gz")
+#compress("bz2")
+#compress("xz")
 

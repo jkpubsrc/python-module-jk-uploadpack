@@ -140,7 +140,7 @@ class UPFileGroup(object):
 		return fi
 	#
 
-	def unpackToDir(self, outBaseDirPath:str, sp:Spinner):
+	def unpackToDir(self, outBaseDirPath:str, sp:Spinner = None):
 		outBaseDirPath = os.path.abspath(outBaseDirPath)
 
 		validDirectories = set()
@@ -179,13 +179,15 @@ class UPFileGroup(object):
 		for e in filesToDelete:
 			updir = self.__directories.get(e.relDirPath)
 			if updir and updir.getEffectiveCleanDir():
-				sp.spin("delete", e.relFilePath, bPrintPercent=False)
+				if sp:
+					sp.spin("delete", e.relFilePath, bPrintPercent=False)
 				os.unlink(e.fullPath)
 
 		for e in dirsToDelete:
 			updir = self.__directories.get(e.relDirPath)
 			if updir and updir.getEffectiveCleanDir():
-				sp.spin("delete", e.relFilePath, bPrintPercent=False)
+				if sp:
+					sp.spin("delete", e.relFilePath, bPrintPercent=False)
 				shutil.rmtree(e.fullPath)
 	#
 
