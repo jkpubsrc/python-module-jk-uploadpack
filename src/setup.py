@@ -43,7 +43,7 @@ setup(
 	packages = [
 		"jk_uploadpack",
 	],
-	version = "0.2021.3.15",
+	version = "0.2021.3.19",
 	zip_safe = False,
 	long_description = readme(),
 	long_description_content_type="text/markdown",
