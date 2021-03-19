@@ -75,6 +75,11 @@ class Packer(object):
 	################################################################################################################################
 
 	@property
+	def filePath(self) -> str:
+		return self.__outFilePath
+	#
+
+	@property
 	def closed(self) -> bool:
 		return self.__t is None
 	#
@@ -117,6 +122,10 @@ class Packer(object):
 	#
 
 	def _registerFile(self, filePath:str) -> typing.Tuple[SrcFileInfo,UPStoredBlob]:
+		assert filePath is not None
+		if self.__t is None:
+			raise Exception("Upload pack is already closed!")
+
 		srcFI = SrcFileInfo.fromFile(filePath)
 
 		sf = self.__filesByHash.get(srcFI.hashID)
@@ -131,6 +140,39 @@ class Packer(object):
 			tarInfo.mode = srcFI.mode		# TODO
 			with open(srcFI.srcFilePath, "rb") as fin:
 				self.__t.addfile(tarInfo, fin)
+			sf = UPStoredBlob(fileID, srcFI.size)
+
+			self.__filesByID.append(sf)
+			self.__filesByHash[srcFI.hashID] = sf
+
+			self.__totalSizeUncompressed += srcFI.size
+
+		self.__totalSizeLogical += srcFI.size
+
+		return srcFI, sf
+	#
+
+	def _registerRaw(self, raw:typing.Union[bytes,bytearray,io.BytesIO]) -> typing.Tuple[SrcFileInfo,UPStoredBlob]:
+		assert raw is not None
+		if self.__t is None:
+			raise Exception("Upload pack is already closed!")
+
+		srcFI = SrcFileInfo.fromRaw(raw)
+
+		sf = self.__filesByHash.get(srcFI.hashID)
+		if sf is None:
+			fileID = len(self.__filesByID)
+
+			tarInfo = tarfile.TarInfo("parts/{}".format(fileID))
+			tarInfo.size = srcFI.size
+			tarInfo.mtime = srcFI.mtime		# TODO
+			tarInfo.uid = 1000				# TODO
+			tarInfo.gid = 1000				# TODO
+			tarInfo.mode = srcFI.mode		# TODO
+			if isinstance(raw, (bytes,bytearray)):
+				self.__t.addfile(tarInfo, io.BytesIO(raw))
+			else:
+				self.__t.addfile(tarInfo, raw)
 			sf = UPStoredBlob(fileID, srcFI.size)
 
 			self.__filesByID.append(sf)

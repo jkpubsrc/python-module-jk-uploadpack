@@ -140,6 +140,39 @@ class UPFileGroup(object):
 		return fi
 	#
 
+	def addStream(self, f, storageFilePath:str) -> UPFile:
+		assert f is not None
+
+		if isinstance(f, (bytes,bytearray)):
+			raw = f
+		elif callable(f):
+			raw = f()
+		else:
+			raw = f.read()
+
+		assert isinstance(storageFilePath, str)
+		assert storageFilePath
+		assert storageFilePath[0] not in "/\\"
+		storageFilePath = storageFilePath.replace("\\", "/")
+
+		srcFI, sf = self.__parent._registerRaw(raw)
+		assert isinstance(srcFI, SrcFileInfo)
+		assert isinstance(sf, UPStoredBlob)
+
+		relDirPath = os.path.dirname(storageFilePath)
+		fileName = os.path.basename(storageFilePath)
+
+		di = self.__directories.get(relDirPath)
+		if di is None:
+			di = UPDir(self, relDirPath, None, None, None, None, [])		# TODO: use user, use mode, use bClean?
+			self.__directories[relDirPath] = di
+
+		fi = UPFile(self, di, fileName, None, None, None, sf.fileID)
+		di.files.append(fi)
+		self.__files.append(fi)		# TODO: use user, use mode?
+		return fi
+	#
+
 	def unpackToDir(self, outBaseDirPath:str, sp:Spinner = None):
 		outBaseDirPath = os.path.abspath(outBaseDirPath)
 

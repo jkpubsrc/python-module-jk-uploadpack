@@ -1,12 +1,14 @@
 
 
 
+import io
 import stat
 import os
 import typing
 import hashlib
 
 import jk_typing
+import jk_utils
 
 from .helpers import sha256_bytesiter, file_read_blockiter
 
@@ -20,6 +22,8 @@ from .helpers import sha256_bytesiter, file_read_blockiter
 #
 class SrcFileInfo(object):
 
+	__DEFAULT_MODE = jk_utils.ChModValue("rwxrwxr-x").toInt()
+
 	################################################################################################################################
 	## Constructor
 	################################################################################################################################
@@ -27,13 +31,14 @@ class SrcFileInfo(object):
 	#
 	# Constructor method.
 	#
-	def __init__(self, size:int, hashID:str, srcFilePath:str, mode:int, mtime:float):
+	def __init__(self, size:int, hashID:str, srcFilePath:typing.Union[str,None], mode:int, mtime:float):
 		assert isinstance(size, int)
 		assert size >= 0
 		assert isinstance(hashID, str)
 		assert hashID
-		assert isinstance(srcFilePath, str)
-		assert srcFilePath
+		if srcFilePath is not None:
+			assert isinstance(srcFilePath, str)
+			assert srcFilePath
 		assert isinstance(mode, int)
 		assert isinstance(mtime, (int, float))
 
@@ -73,6 +78,22 @@ class SrcFileInfo(object):
 		hashID = "sha256:{}:{}".format(hashDigest, size)
 
 		return SrcFileInfo(size, hashID, filePath, mode, mtime)
+	#
+
+	@staticmethod
+	def fromRaw(raw:typing.Union[bytes,bytearray,io.BytesIO]):
+		mode = SrcFileInfo.__DEFAULT_MODE
+		size = len(raw)
+		uid = 1000
+		gid = 1000
+		mtime = 0
+
+		hashAlg = hashlib.sha256()
+		hashAlg.update(raw)
+		hashDigest = hashAlg.hexdigest()
+		hashID = "sha256:{}:{}".format(hashDigest, size)
+
+		return SrcFileInfo(size, hashID, None, mode, mtime)
 	#
 
 #

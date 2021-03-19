@@ -72,6 +72,11 @@ class Unpacker(object):
 	################################################################################################################################
 
 	@property
+	def filePath(self) -> str:
+		return self.__archiveFilePath
+	#
+
+	@property
 	def fileGroupIdentifiers(self) -> list:
 		return sorted(self.__fileGroups.keys())
 	#
