@@ -8,7 +8,7 @@ This python module provides a packer/unpacker based on 'tar' that reduces redund
 
 Information about this module can be found here:
 
-* [github.org](https://github.com/jkpubsrc/python-module-jk-uploadpack)
+* [github.com](https://github.com/jkpubsrc/python-module-jk-uploadpack)
 * [pypi.python.org](https://pypi.python.org/pypi/jk_uploadpack)
 
 Why 'uploadpack'?
